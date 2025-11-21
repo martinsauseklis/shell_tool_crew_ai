@@ -1,0 +1,26 @@
+research_task:
+  description: >
+    Conduct a thorough research about Seat Leon ST.
+    Make sure you find any interesting and relevant information given.
+    Keep in mind this will be used as data source for the development task.
+  expected_output: >
+    A list with 100 interesting facts about Seat Leon ST saved in json format. It must be a valid JSON.
+  agent: web_developer
+
+coding_task:
+  description: >
+    Create a stunning web app. Use data from research task as a source for content.
+  expected_output: >
+    React app that can be run locally. Use Tailwind and modern UI libraries for most effect.
+    Write the app to output folder.
+  agent: web_developer
+  context: [research_task]
+
+debugging_task:
+  description: >
+    Install dependencies for the app and do test runs to check if there are no errors.
+  expected_output: >
+    App dependencies can be installed.
+    App runs without errors.
+  agent: web_developer
+  context: [coding_task]
