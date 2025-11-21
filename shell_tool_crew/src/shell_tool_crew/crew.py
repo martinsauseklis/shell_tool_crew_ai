@@ -31,11 +31,20 @@ class ShellToolCrew():
         )
 
     @agent
-    def car_researcher(self) -> Agent:
+    def learning_expert(self) -> Agent:
         return Agent(
-            config=self.agents_config['car_researcher'],  # type: ignore[index]
+            # type: ignore[index]
+            config=self.agents_config['learning_expert'],
             verbose=True,
             tools=[SerperDevTool(), FileReadTool(), FileWriterTool()]
+        )
+
+    @agent
+    def ai_master(self) -> Agent:
+        return Agent(
+            config=self.agents_config['ai_master'],  # type: ignore[index]
+            verbose=True,
+            tools=[SerperDevTool(), FileWriterTool()]
         )
 
     @agent
@@ -54,9 +63,15 @@ class ShellToolCrew():
     def research_task(self) -> Task:
         return Task(
             config=self.tasks_config['research_task'],  # type: ignore[index]
-            output_file="output/leon_st.json"
         )
-
+    
+    @task
+    def learning_planning_task(self) -> Task:
+        return Task(
+            # type: ignore[index]
+            config=self.tasks_config['learning_planning_task'],
+        )
+    
     @task
     def coding_task(self) -> Task:
         return Task(
@@ -69,6 +84,8 @@ class ShellToolCrew():
             config=self.tasks_config['debugging_task'],  # type: ignore[index]
         )
 
+
+
     @crew
     def crew(self) -> Crew:
         """Creates the ShellToolCrew crew"""
@@ -79,6 +96,6 @@ class ShellToolCrew():
             agents=self.agents,  # Automatically created by the @agent decorator
             tasks=self.tasks,  # Automatically created by the @task decorator
             process=Process.sequential,
-            verbose=True,
+            verbose=True
             # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
         )
