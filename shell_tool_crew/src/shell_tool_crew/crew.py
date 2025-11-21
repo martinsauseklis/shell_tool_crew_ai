@@ -8,6 +8,7 @@ from typing import List
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
 
+
 @CrewBase
 class ShellToolCrew():
     """ShellToolCrew crew"""
@@ -18,38 +19,54 @@ class ShellToolCrew():
     # Learn more about YAML configuration files here:
     # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
     # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
-    
+
     # If you would like to add tools to your agents, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
     def web_developer(self) -> Agent:
         return Agent(
-            config=self.agents_config['web_developer'], # type: ignore[index]
+            config=self.agents_config['web_developer'],  # type: ignore[index]
             verbose=True,
-            tools=[SerperDevTool(), FileReadTool(), FileWriterTool(), ShellCommandTool()]
+            tools=[FileWriterTool()]
         )
 
+    @agent
+    def car_researcher(self) -> Agent:
+        return Agent(
+            config=self.agents_config['car_researcher'],  # type: ignore[index]
+            verbose=True,
+            tools=[SerperDevTool(), FileReadTool(), FileWriterTool()]
+        )
+
+    @agent
+    def debugger(self) -> Agent:
+        return Agent(
+            config=self.agents_config['debugger'],  # type: ignore[index]
+            verbose=True,
+            tools=[FileReadTool(), ShellCommandTool()]
+        )
 
     # To learn more about structured task outputs,
     # task dependencies, and task callbacks, check out the documentation:
     # https://docs.crewai.com/concepts/tasks#overview-of-a-task
+
     @task
     def research_task(self) -> Task:
         return Task(
-            config=self.tasks_config['research_task'], # type: ignore[index]
+            config=self.tasks_config['research_task'],  # type: ignore[index]
             output_file="output/leon_st.json"
         )
 
     @task
     def coding_task(self) -> Task:
         return Task(
-            config=self.tasks_config['coding_task'], # type: ignore[index]
+            config=self.tasks_config['coding_task'],  # type: ignore[index]
         )
-    
+
     @task
     def debugging_task(self) -> Task:
         return Task(
-            config=self.tasks_config['debugging_task'], # type: ignore[index]
+            config=self.tasks_config['debugging_task'],  # type: ignore[index]
         )
 
     @crew
@@ -59,8 +76,8 @@ class ShellToolCrew():
         # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
 
         return Crew(
-            agents=self.agents, # Automatically created by the @agent decorator
-            tasks=self.tasks, # Automatically created by the @task decorator
+            agents=self.agents,  # Automatically created by the @agent decorator
+            tasks=self.tasks,  # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=True,
             # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
